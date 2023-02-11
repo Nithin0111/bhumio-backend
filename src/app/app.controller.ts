@@ -10,9 +10,4 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  @Post('/addUser')
-  async addUser(@Body() user: userDTO): Promise<userDTO> {
-    return this.appService.addUser(user);
-  }
 }

@@ -10,6 +10,10 @@ import { ReqestMiddleware } from 'src/shared/middlewares';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpErrorFilter } from 'src/shared/filter/http-error.util';
 import { ResponseInterceptor } from 'src/interceptors/response.interceptor';
+import { TableModule } from 'src/dbservices/tables/table.module';
+import { usersModule } from 'src/features/users/users.module';
+import { usersController } from 'src/features/users/users.controller';
+import { usersService } from 'src/features/users/users.service';
 
 @Module({
   imports: [
@@ -24,8 +28,10 @@ import { ResponseInterceptor } from 'src/interceptors/response.interceptor';
       },
       KNEX_CONNECTION,
     ),
+    TableModule,
+    usersModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, usersController],
   providers: [
     AppService,
     {
@@ -36,6 +42,7 @@ import { ResponseInterceptor } from 'src/interceptors/response.interceptor';
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
     },
+    usersService,
   ],
 })
 export class AppModule {

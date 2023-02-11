@@ -20,7 +20,7 @@ export class KnexDBConnectionService implements KnexModuleOptionsFactory {
           port: 5432,
           user: 'postgres',
         },
-        debug: true,
+        debug: false,
         migrations: {
           directory: __dirname + '../db/migrations',
         },

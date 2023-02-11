@@ -10,7 +10,6 @@ import { exec } from 'child_process';
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
-
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest();
