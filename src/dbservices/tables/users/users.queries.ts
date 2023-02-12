@@ -4,6 +4,8 @@ import { InjectKnex } from 'nestjs-knex';
 import * as bcrypt from 'bcrypt';
 import { userDTO } from 'src/dbservices/entities/user.entity';
 import { tableNames } from 'src/shared/constants/dbtables';
+import { checkValidEmail } from 'src/shared/utils/checkValidEmail';
+import { Role } from 'src/shared/constants/role.enum';
 
 @Injectable()
 export class usersDBQueries {
@@ -26,10 +28,13 @@ export class usersDBQueries {
         );
       }
 
-      const emailRegex = new RegExp(
-        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-      );
-      if (!emailRegex.test(email)) {
+      const isValidRole = Object.values(Role).includes(role as any);
+      if (!isValidRole) {
+        throw new HttpException('Invalid role', HttpStatus.BAD_REQUEST);
+      }
+
+      const isValidEmail = checkValidEmail(email);
+      if (!isValidEmail) {
         throw new HttpException('Invalid email', HttpStatus.BAD_REQUEST);
       }
 
@@ -76,10 +81,8 @@ export class usersDBQueries {
         );
       }
 
-      const emailRegex = new RegExp(
-        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-      );
-      if (!emailRegex.test(email)) {
+      const isValidEmail = checkValidEmail(email);
+      if (!isValidEmail) {
         throw new HttpException('Invalid email', HttpStatus.BAD_REQUEST);
       }
 

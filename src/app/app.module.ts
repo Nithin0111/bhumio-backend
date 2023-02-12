@@ -7,13 +7,16 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { dbconfig } from 'src/config/envconfig';
 import { ReqestMiddleware } from 'src/shared/middlewares';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { HttpErrorFilter } from 'src/shared/filter/http-error.util';
 import { ResponseInterceptor } from 'src/interceptors/response.interceptor';
 import { TableModule } from 'src/dbservices/tables/table.module';
 import { usersModule } from 'src/features/users/users.module';
 import { usersController } from 'src/features/users/users.controller';
 import { usersService } from 'src/features/users/users.service';
+import { AuthModule } from 'src/auth/auth.module';
+import { AuthService } from 'src/auth/auth.service';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @Module({
   imports: [
@@ -30,6 +33,7 @@ import { usersService } from 'src/features/users/users.service';
     ),
     TableModule,
     usersModule,
+    AuthModule,
   ],
   controllers: [AppController, usersController],
   providers: [
@@ -43,6 +47,11 @@ import { usersService } from 'src/features/users/users.service';
       useClass: ResponseInterceptor,
     },
     usersService,
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AppModule {
